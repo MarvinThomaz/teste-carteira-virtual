@@ -49,6 +49,8 @@ namespace teste_carteira_virtual.Application.Commands
                     CreateClient(cart);
                 }
 
+                cart.ClientKey = cart.Client.Key;
+
                 await _cartRepository.AddCart(cart);
 
                 return new GetCartViewModel
@@ -100,6 +102,8 @@ namespace teste_carteira_virtual.Application.Commands
                     Number = Model.Client.Address.Number
                 }
             };
+
+            cart.Client.AddressKey = cart.Client.Address.Key;
         }
     }
 }

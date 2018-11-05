@@ -1,0 +1,18 @@
+{
+    "externalKey": "123",
+    "client": {
+      "documentId": "133.227.057-30",
+      "name": "Marvin Thomaz do Nascimento",
+      "phone": "(24) 98155-9815",
+      "address": {
+        "street": "Rua Dr. Thouzet",
+        "complement": "BNH Bl 3-2 AP 403",
+        "number": 600,
+        "postalCode": "25650-061",
+        "city": "Petrópolis",
+        "state": "Rio de Janeiro",
+        "country": "Brasil"
+      }
+    },
+    "chargeValue": 25.00
+  }

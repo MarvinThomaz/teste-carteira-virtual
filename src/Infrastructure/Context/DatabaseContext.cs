@@ -26,6 +26,9 @@ namespace teste_carteira_virtual.Infrastructure.Context
             modelBuilder.Entity<Client>().HasKey(c => c.Key);
             modelBuilder.Entity<Address>().HasKey(a => a.Key);
 
+            modelBuilder.Entity<Cart>().HasOne(c => c.Client).WithMany(c => c.Carts).HasForeignKey(c => c.ClientKey);
+            modelBuilder.Entity<Client>().HasOne(c => c.Address).WithOne(a => a.Client).HasForeignKey<Client>(c => c.AddressKey);
+
             base.OnModelCreating(modelBuilder);
         }
     }

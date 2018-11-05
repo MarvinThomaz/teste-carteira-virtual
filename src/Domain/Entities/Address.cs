@@ -12,5 +12,6 @@ namespace teste_carteira_virtual.Domain.Entities
         public string City { get; set; }
         public string State { get; set; }
         public string Country { get; set; }
+        public Client Client { get; set; }
     }
 }
