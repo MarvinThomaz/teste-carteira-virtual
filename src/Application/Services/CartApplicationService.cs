@@ -132,18 +132,7 @@ namespace teste_carteira_virtual.Application.Services
         {
             if(model.ChargeValue == null && model.IsActive != false)
             {
-                return new ObjectResponse<GetCartViewModel>
-                {
-                    Validations = new List<ValidationResponse>
-                    {
-                        new ValidationResponse
-                        {
-                            Type = ResponseType.NotFoundedObject,
-                            Property = nameof(model)
-                        }
-                    },
-                    Success = false
-                };
+                return CreateNotFoundValidation(model);
             }
 
             GetCartViewModel result = null;
@@ -154,12 +143,30 @@ namespace teste_carteira_virtual.Application.Services
                 {
                     _updateCartValueCommand.Model = model;
 
+                    if(_updateCartValueCommand.Validations?.Any() == true)
+                    {
+                        return new ObjectResponse<GetCartViewModel>
+                        {
+                            Validations = _updateCartValueCommand.Validations,
+                            Success = false
+                        };
+                    }
+
                     result = await _updateCartValueCommand.Execute(externalKey);
                 }
 
                 if(model.IsActive == false)
                 {
                     result = await _disableCartCommand.Execute(externalKey);
+
+                    if(_disableCartCommand.Validations?.Any() == true)
+                    {
+                        return new ObjectResponse<GetCartViewModel>
+                        {
+                            Validations = _disableCartCommand.Validations,
+                            Success = false
+                        };
+                    }
                 }
 
                 _transactionManager.Commit();
@@ -169,6 +176,22 @@ namespace teste_carteira_virtual.Application.Services
             {
                 Data = result,
                 Success = true
+            };
+        }
+
+        private static ObjectResponse<GetCartViewModel> CreateNotFoundValidation(UpdateCartModel model)
+        {
+            return new ObjectResponse<GetCartViewModel>
+            {
+                Validations = new List<ValidationResponse>
+                    {
+                        new ValidationResponse
+                        {
+                            Type = ResponseType.NotFoundedObject,
+                            Property = nameof(model)
+                        }
+                    },
+                Success = false
             };
         }
     }

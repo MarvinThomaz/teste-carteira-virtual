@@ -31,7 +31,7 @@ namespace teste_carteira_virtual.Infrastructure.Repositories
             return await _context
                     	    .Set<Cart>()
                             .Include(c => c.Client)
-                            .FirstOrDefaultAsync(c => c.Client.DocumentId == documentId);
+                            .FirstOrDefaultAsync(c => c.Client.DocumentId == documentId && c.IsActive == true);
         }
 
         public async Task<Cart> GetCartFromExternalKey(string externalKey)
@@ -39,7 +39,7 @@ namespace teste_carteira_virtual.Infrastructure.Repositories
             return await _context
                     	    .Set<Cart>()
                             .Include(c => c.Client)
-                            .FirstOrDefaultAsync(c => c.ExternalKey == externalKey);
+                            .FirstOrDefaultAsync(c => c.ExternalKey == externalKey && c.IsActive == true);
         }
 
         public async Task<IEnumerable<Cart>> GetCartsByStatus(bool isActive)
@@ -59,7 +59,7 @@ namespace teste_carteira_virtual.Infrastructure.Repositories
 
         public async Task UpdateCartStatus(string externalKey, bool isActive)
         {
-            var cart = await _context.Set<Cart>().FirstOrDefaultAsync(c => c.ExternalKey == externalKey);
+            var cart = await _context.Set<Cart>().FirstOrDefaultAsync(c => c.ExternalKey == externalKey && c.IsActive == true);
 
             cart.IsActive = isActive;
 
@@ -70,7 +70,7 @@ namespace teste_carteira_virtual.Infrastructure.Repositories
 
         public async Task UpdateCartValue(string externalKey, double value)
         {
-            var cart = await _context.Set<Cart>().FirstOrDefaultAsync(c => c.ExternalKey == externalKey);
+            var cart = await _context.Set<Cart>().FirstOrDefaultAsync(c => c.ExternalKey == externalKey && c.IsActive == true);
 
             cart.ChargeValue = value;
 
