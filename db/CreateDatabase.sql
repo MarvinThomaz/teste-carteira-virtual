@@ -20,8 +20,8 @@ CREATE TABLE `DB_CARRINHO_CHOPPEIRA`.`Client`
   `Name`	    VARCHAR(100)	NOT NULL,
   `AddressKey`	CHAR(36)		NOT NULL,
   `DocumentId`	VARCHAR(14)		NOT NULL,
-  `Phone`		VARCHAR(13)		NOT NULL,
-  `SecondPhone`	VARCHAR(13)	    NULL,
+  `Phone`		VARCHAR(15)		NOT NULL,
+  `SecondPhone`	VARCHAR(15)	    NULL,
   
   PRIMARY KEY (`Key`),
   CONSTRAINT `FK_Client_Address` FOREIGN KEY (`AddressKey`) REFERENCES `Address` (`Key`)
