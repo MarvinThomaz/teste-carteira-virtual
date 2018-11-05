@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using teste_carteira_virtual.Accessors;
 using teste_carteira_virtual.Application.Abstractions;
+using teste_carteira_virtual.Domain.Abstractions;
 using teste_carteira_virtual.Domain.Enums;
 using teste_carteira_virtual.Domain.Models;
 using teste_carteira_virtual.Domain.Services;
+using teste_carteira_virtual.Paging;
 
 namespace teste_carteira_virtual.Controllers
 {
@@ -88,7 +91,7 @@ namespace teste_carteira_virtual.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetActiveCarts()
+        public async Task<IActionResult> GetActiveCarts([FromQuery] PagingParameters parameters)
         {
             var response = await _service.GetActiveCarts();
 

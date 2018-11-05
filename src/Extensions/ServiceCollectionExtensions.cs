@@ -1,4 +1,4 @@
-using teste_carteira_virtual.Abstractions;
+using teste_carteira_virtual.Accessors;
 using teste_carteira_virtual.Application.Abstractions;
 using teste_carteira_virtual.Domain.Abstractions;
 

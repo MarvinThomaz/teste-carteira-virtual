@@ -1,5 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using teste_carteira_virtual.Paging;
+using teste_carteira_virtual.Accessors;
 using teste_carteira_virtual.Application.Abstractions;
 using teste_carteira_virtual.Domain.Enums;
 using teste_carteira_virtual.Domain.Services;
@@ -17,7 +19,7 @@ namespace teste_carteira_virtual.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetClientFromPartOfName([FromQuery] string name)
+        public async Task<IActionResult> GetClientFromPartOfName([FromQuery] string name, [FromQuery] PagingParameters parameters)
         {
             var response = await _service.GetClientFromPartOfName(name);
 

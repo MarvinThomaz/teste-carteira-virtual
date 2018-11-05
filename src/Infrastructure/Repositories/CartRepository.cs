@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using teste_carteira_virtual.Domain.Abstractions;
 using teste_carteira_virtual.Domain.Entities;
 using teste_carteira_virtual.Domain.Repositories;
 using teste_carteira_virtual.Infrastructure.Context;
@@ -11,10 +12,12 @@ namespace teste_carteira_virtual.Infrastructure.Repositories
     public class CartRepository : ICartRepository
     {
         private readonly DatabaseContext _context;
+        private readonly IPagingParametersAccessor _pagingParametersAccessor;
 
-        public CartRepository(DatabaseContext context)
+        public CartRepository(DatabaseContext context, IPagingParametersAccessor pagingParametersAccessor)
         {
             _context = context;
+            _pagingParametersAccessor = pagingParametersAccessor;
         }
 
         public async Task AddCart(Cart cart)
@@ -41,11 +44,17 @@ namespace teste_carteira_virtual.Infrastructure.Repositories
 
         public async Task<IEnumerable<Cart>> GetCartsByStatus(bool isActive)
         {
-            return await _context
+            var result = await _context
                     	    .Set<Cart>()
                             .Include(c => c.Client)
                             .Where(c => c.IsActive == isActive)
+                            .Take(_pagingParametersAccessor.RecordsPerPage)
+                            .Skip(_pagingParametersAccessor.Skip)
                             .ToListAsync();
+
+            _pagingParametersAccessor.TotalItems = result?.Count ?? 0;
+
+            return result;
         }
 
         public async Task UpdateCartStatus(string externalKey, bool isActive)
