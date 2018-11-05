@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using teste_carteira_virtual.Application.Abstractions;
 using teste_carteira_virtual.Domain.Enums;
 using teste_carteira_virtual.Domain.Models;
 using teste_carteira_virtual.Domain.Services;
@@ -10,11 +11,11 @@ using teste_carteira_virtual.Domain.Services;
 namespace teste_carteira_virtual.Controllers
 {
     [Route("api/carts")]
-    public class CartsController : ControllerBase
+    public class CartsController : AbstractController
     {
         private readonly ICartApplicationService _service;
 
-        public CartsController(ICartApplicationService service)
+        public CartsController(ICartApplicationService service, IModelStateAccessor accessor) : base(accessor)
         {
             _service = service;
         }
@@ -36,7 +37,7 @@ namespace teste_carteira_virtual.Controllers
 
         [HttpPut]
         [Route("{externalKey}")]
-        public async Task<IActionResult> UpdateCartValue(string externalKey, [FromBody] UpdateCartValueModel request)
+        public async Task<IActionResult> UpdateCartValue(string externalKey, [FromBody] UpdateCartModel request)
         {
             var response = await _service.UpdateCart(externalKey, request);
 

@@ -15,8 +15,8 @@ namespace teste_carteira_virtual.Application.Services
 {
     public class CartApplicationService : ICartApplicationService
     {
+        private readonly ITransactionManager _transactionManager;
         private readonly IPagingParametersAccessor _pagingParametersAccessor;
-        private readonly IModelStateAccessor _modelStateAccessor;
         private readonly IAddCartCommand _addCartCommand;
         private readonly IGetActiveCartFromClientQuery _getActiveCartFromClientQuery;
         private readonly IGetActiveCartsQuery _getActiveCartsQuery;
@@ -26,8 +26,8 @@ namespace teste_carteira_virtual.Application.Services
 
         public CartApplicationService
         (
+            ITransactionManager transactionManager,
             IPagingParametersAccessor pagingParametersAccessor,
-            IModelStateAccessor modelStateAccessor,
             IAddCartCommand addCartCommand,
             IGetActiveCartFromClientQuery getActiveCartFromClientQuery,
             IGetActiveCartsQuery getActiveCartsQuery,
@@ -36,8 +36,8 @@ namespace teste_carteira_virtual.Application.Services
             IDisableCartCommand disableCartCommand
         )
         {
+            _transactionManager = transactionManager;
             _pagingParametersAccessor = pagingParametersAccessor;
-            _modelStateAccessor = modelStateAccessor;
             _addCartCommand = addCartCommand;
             _getActiveCartFromClientQuery = getActiveCartFromClientQuery;
             _getActiveCartsQuery = getActiveCartsQuery;
@@ -48,20 +48,23 @@ namespace teste_carteira_virtual.Application.Services
 
         public async Task<ObjectResponse<GetCartViewModel>> Create(AddCartModel model)
         {
-            var validations = _modelStateAccessor.ModelState.ValidateModel();
+            _addCartCommand.Model = model;
 
-            if(validations.Any())
+            using(_transactionManager.Begin())
+            {
+                var result = await _addCartCommand.Execute();
+
+                _transactionManager.Commit();
+            }
+
+            if(_addCartCommand.Validations?.Any() == true)
             {
                 return new ObjectResponse<GetCartViewModel>
                 {
-                    Validations = validations,
+                    Validations = _addCartCommand.Validations,
                     Success = false
                 };
             }
-
-            _addCartCommand.Model = model;
-
-            var result = await _addCartCommand.Execute();
 
             return new ObjectResponse<GetCartViewModel>
             {
@@ -74,18 +77,11 @@ namespace teste_carteira_virtual.Application.Services
         {
             var result = await _getActiveCartFromClientQuery.Execute(documentId);
 
-            if(result == null)
+            if(_getActiveCartFromClientQuery.Validations?.Any() == true)
             {
                 return new ObjectResponse<GetCartViewModel>
                 {
-                    Validations = new List<ValidationResponse>
-                    {
-                        new ValidationResponse
-                        {
-                            Type = ResponseType.NotFoundedObject,
-                            Property = nameof(documentId)
-                        }
-                    },
+                    Validations = _getActiveCartFromClientQuery.Validations,
                     Success = false
                 };
             }
@@ -116,18 +112,11 @@ namespace teste_carteira_virtual.Application.Services
         {
             var result = await _getCartFromExternalKeyQuery.Execute(externalKey);
 
-            if(result == null)
+            if(_getCartFromExternalKeyQuery.Validations?.Any() == true)
             {
                 return new ObjectResponse<GetCartViewModel>
                 {
-                    Validations = new List<ValidationResponse>
-                    {
-                        new ValidationResponse
-                        {
-                            Type = ResponseType.NotFoundedObject,
-                            Property = nameof(externalKey)
-                        }
-                    },
+                    Validations = _getCartFromExternalKeyQuery.Validations,
                     Success = false
                 };
             }
@@ -159,18 +148,23 @@ namespace teste_carteira_virtual.Application.Services
 
             GetCartViewModel result = null;
 
-            if(model.ChargeValue != null)
+            using(_transactionManager.Begin())
             {
-                _updateCartValueCommand.Model = model;
+                if(model.ChargeValue != null)
+                {
+                    _updateCartValueCommand.Model = model;
 
-                result = await _updateCartValueCommand.Execute(externalKey);
+                    result = await _updateCartValueCommand.Execute(externalKey);
+                }
+
+                if(model.IsActive == false)
+                {
+                    result = await _disableCartCommand.Execute(externalKey);
+                }
+
+                _transactionManager.Commit();
             }
-
-            if(model.IsActive == false)
-            {
-                result = await _disableCartCommand.Execute(externalKey);
-            }
-
+            
             return new ObjectResponse<GetCartViewModel>
             {
                 Data = result,

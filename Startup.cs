@@ -24,12 +24,16 @@ namespace teste_carteira_virtual
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddInfra();
+            services.AddApp();
+            services.AddApi();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseException();
+            app.UsePagingParameters();
             app.UseMvc();
         }
     }

@@ -8,5 +8,6 @@ namespace teste_carteira_virtual.Domain.Entities
         public string ExternalKey { get; set; }
         public Client Client { get; set; }
         public double ChargeValue { get; set; }
+        public bool IsActive { get; set; }
     }
 }

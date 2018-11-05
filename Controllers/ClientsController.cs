@@ -1,16 +1,17 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using teste_carteira_virtual.Application.Abstractions;
 using teste_carteira_virtual.Domain.Enums;
 using teste_carteira_virtual.Domain.Services;
 
 namespace teste_carteira_virtual.Controllers
 {
     [Route("api/clients")]
-    public class ClientsController : ControllerBase
+    public class ClientsController : AbstractController
     {
         private readonly IClientApplicationService _service;
 
-        public ClientsController(IClientApplicationService service)
+        public ClientsController(IClientApplicationService service, IModelStateAccessor accessor) : base(accessor)
         {
             _service = service;
         }

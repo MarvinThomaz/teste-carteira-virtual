@@ -19,6 +19,7 @@ namespace teste_carteira_virtual
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureLogging(logging => logging.AddConsole())
                 .UseStartup<Startup>();
     }
 }
