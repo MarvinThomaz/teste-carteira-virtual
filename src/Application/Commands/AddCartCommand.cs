@@ -74,7 +74,8 @@ namespace teste_carteira_virtual.Application.Commands
             {
                 Key = Guid.NewGuid(),
                 ExternalKey = Model.ExternalKey,
-                ChargeValue = Model.ChargeValue
+                ChargeValue = Model.ChargeValue,
+                IsActive = true
             };
         }
 
