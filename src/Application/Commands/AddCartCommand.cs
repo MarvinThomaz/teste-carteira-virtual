@@ -40,6 +40,8 @@ namespace teste_carteira_virtual.Application.Commands
             {
                 var cart = CreateCart();
 
+                await _cartRepository.UpdateCartStatus(cart.ExternalKey, false);
+
                 cart.Client = await _clientRepository.GetClientFromDocumentId(Model.Client.DocumentId);
                 
                 if(cart.Client == null)
