@@ -26,7 +26,6 @@ namespace teste_carteira_virtual.Application.Services
             _pagingParametersAccessor = pagingParametersAccessor;
             _getClientFromDocumentIdQuery = getClientFromDocumentIdQuery;
             _getClientFromPartOfNameQuery = getClientFromPartOfNameQuery;
-            _transactionManager = transactionManager;
         }
 
         public async Task<ObjectResponse<GetClientViewModel>> GetClientFromDocumentId(string documentId)

@@ -9,16 +9,14 @@ namespace teste_carteira_virtual.Middlewares
 {
     public class PagingParametersMiddleware
     {
-        private readonly IPagingParametersAccessor _accessor;
         private readonly RequestDelegate _next;
 
-        public PagingParametersMiddleware(IPagingParametersAccessor accessor, RequestDelegate next)
+        public PagingParametersMiddleware(RequestDelegate next)
         {
-            _accessor = accessor;
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, IPagingParametersAccessor accessor)
         {
             StringValues page;
             StringValues recordsPerPage;
@@ -28,12 +26,12 @@ namespace teste_carteira_virtual.Middlewares
 
             if(page.ToString() != null)
             {
-                _accessor.Page = Convert.ToInt32(page);
+                accessor.Page = Convert.ToInt32(page);
             }
 
             if(recordsPerPage.ToString() != null)
             {
-                _accessor.RecordsPerPage = Convert.ToInt32(recordsPerPage);
+                accessor.RecordsPerPage = Convert.ToInt32(recordsPerPage);
             }
 
             await _next(context);

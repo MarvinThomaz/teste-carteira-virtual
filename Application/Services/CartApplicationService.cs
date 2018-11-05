@@ -55,22 +55,22 @@ namespace teste_carteira_virtual.Application.Services
                 var result = await _addCartCommand.Execute();
 
                 _transactionManager.Commit();
-            }
+            
+                if(_addCartCommand.Validations?.Any() == true)
+                {
+                    return new ObjectResponse<GetCartViewModel>
+                    {
+                        Validations = _addCartCommand.Validations,
+                        Success = false
+                    };
+                }
 
-            if(_addCartCommand.Validations?.Any() == true)
-            {
                 return new ObjectResponse<GetCartViewModel>
                 {
-                    Validations = _addCartCommand.Validations,
-                    Success = false
+                    Data = result,
+                    Success = true
                 };
             }
-
-            return new ObjectResponse<GetCartViewModel>
-            {
-                Data = result,
-                Success = true
-            };
         }
 
         public async Task<ObjectResponse<GetCartViewModel>> GetActiveCartFromClient(string documentId)

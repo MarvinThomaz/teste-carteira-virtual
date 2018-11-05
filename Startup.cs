@@ -35,7 +35,7 @@ namespace teste_carteira_virtual
                            Description = "API de gerênciamento de dados do carrinho da choppeira"
                        });
 
-                options.IncludeXmlComments("POC.EntityFramework.OData.xml");
+                options.IncludeXmlComments("teste-carteira-virtual.xml");
             });
 
             services.AddInfra();
