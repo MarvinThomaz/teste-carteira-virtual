@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace teste_carteira_virtual
 {
@@ -24,6 +25,19 @@ namespace teste_carteira_virtual
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1",
+                       new Info
+                       {
+                           Title = "Carrinho Virtual de Choppeira",
+                           Version = "v1",
+                           Description = "API de gerênciamento de dados do carrinho da choppeira"
+                       });
+
+                options.IncludeXmlComments("POC.EntityFramework.OData.xml");
+            });
+
             services.AddInfra();
             services.AddApp();
             services.AddApi();
@@ -32,6 +46,9 @@ namespace teste_carteira_virtual
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseSwagger();
+            app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "Choppeira Cart"));
+
             app.UseException();
             app.UsePagingParameters();
             app.UseMvc();

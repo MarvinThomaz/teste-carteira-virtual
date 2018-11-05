@@ -8,5 +8,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App"/>
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.2"/>
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="3.0.0"/>
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="3.0.0"/>
+    <PackageReference Include="Swashbuckle.AspNetCore.Examples" Version="2.9.0"/>
   </ItemGroup>
 </Project>

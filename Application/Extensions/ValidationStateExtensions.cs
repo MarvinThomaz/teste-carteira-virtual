@@ -26,7 +26,7 @@ namespace Microsoft.AspNetCore.Mvc.ModelBinding
                         Type = ResponseType.ValidationErrorOfObject,
                         Message = error.ErrorMessage,
                         Property = property
-                    }
+                    };
                 }
             }
         }
