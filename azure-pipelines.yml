@@ -9,10 +9,8 @@ pool:
 variables:
   buildConfiguration: 'Release'
 
-steps:
-  script: 
-    - cd src
-    - ls
-    - dotnet build --configuration $(buildConfiguration)
-
-  displayName: 'dotnet build $(buildConfiguration)'
+steps: 'dotnet build $(buildConfiguration)'
+script:
+- cd src
+- ls
+- dotnet build --configuration $(buildConfiguration)
