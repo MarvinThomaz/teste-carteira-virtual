@@ -1,0 +1,19 @@
+{
+  "name": "teste-carteira-virtual",
+  "description": "",
+  "scripts": {
+  },
+  "env": {
+    "ASPNETCORE_ENVIRONMENT": "Production"
+  },
+  "formation": {
+  },
+  "addons": [
+
+  ],
+  "buildpacks": [
+    {
+      "url": "jincod/dotnetcore"
+    }
+  ]
+}
