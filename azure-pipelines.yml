@@ -13,6 +13,6 @@ variables:
 
 steps: 'dotnet build $(buildConfiguration)'
 
-  - script: cd src
-  - script: ls
-  - script: dotnet build --configuration $(buildConfiguration)
+- script: cd src
+- script: ls
+- script: dotnet build --configuration $(buildConfiguration)
