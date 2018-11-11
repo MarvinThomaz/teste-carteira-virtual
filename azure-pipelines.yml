@@ -10,8 +10,8 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: cd src
-- script: ls
+  workingDirectory: $(buildConfiguration)/src
+
 - script: cd src | ls | dotnet build --configuration $(buildConfiguration)
 
   displayName: 'dotnet build $(buildConfiguration)'
