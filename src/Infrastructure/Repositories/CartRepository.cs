@@ -44,17 +44,17 @@ namespace teste_carteira_virtual.Infrastructure.Repositories
 
         public async Task<IEnumerable<Cart>> GetCartsByStatus(bool isActive)
         {
-            var result = await _context
+            var result = _context
                     	    .Set<Cart>()
                             .Include(c => c.Client)
-                            .Where(c => c.IsActive == isActive)
-                            .Take(_pagingParametersAccessor.RecordsPerPage)
-                            .Skip(_pagingParametersAccessor.Skip)
-                            .ToListAsync();
+                            .Where(c => c.IsActive == isActive);
 
-            _pagingParametersAccessor.TotalItems = result?.Count ?? 0;
+            _pagingParametersAccessor.TotalItems = result?.Count() ?? 0;
 
-            return result;
+            return await result
+                    .Skip(_pagingParametersAccessor.Skip)
+                    .Take(_pagingParametersAccessor.RecordsPerPage)
+                    .ToListAsync();
         }
 
         public async Task UpdateCartStatus(string externalKey, bool isActive)
