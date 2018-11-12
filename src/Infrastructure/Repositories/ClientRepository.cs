@@ -22,14 +22,18 @@ namespace teste_carteira_virtual.Infrastructure.Repositories
 
         public async Task<Client> GetClientFromDocumentId(string documentId)
         {
-            return await _context.Set<Client>().FirstOrDefaultAsync(c => c.DocumentId == documentId);
+            return await _context
+                            .Set<Client>()
+                            .Include(C => C.Address)
+                            .FirstOrDefaultAsync(c => c.DocumentId == documentId);
         }
 
         public async Task<IEnumerable<Client>> GetClientFromPartOfName(string name)
         {
             var result = await _context
                             .Set<Client>()
-                            .Where(c => c.Name.Contains(name))
+                            .Include(c => c.Address)
+                            .Where(c => string.IsNullOrEmpty(name) || c.Name.ToLower().Contains(name.ToLower()))
                             .Take(_pagingParametersAccessor.RecordsPerPage)
                             .Skip(_pagingParametersAccessor.Skip)
                             .ToListAsync();
