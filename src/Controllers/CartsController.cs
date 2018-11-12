@@ -59,7 +59,7 @@ namespace teste_carteira_virtual.Controllers
         }
 
         [HttpGet]
-        [Route("clients/{documentId}")]
+        [Route("/api/clients/{documentId}/carts")]
         public async Task<IActionResult> GetActiveCartFromClient(string documentId)
         {
             var response = await _service.GetActiveCartFromClient(documentId);
