@@ -61,6 +61,11 @@ namespace teste_carteira_virtual.Infrastructure.Repositories
         {
             var cart = await _context.Set<Cart>().FirstOrDefaultAsync(c => c.ExternalKey == externalKey && c.IsActive == true);
 
+            if(cart == null)
+            {
+                return;
+            }
+
             cart.IsActive = isActive;
 
             _context.Entry(cart).State = EntityState.Modified;
