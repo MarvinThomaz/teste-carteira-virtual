@@ -1,12 +1,12 @@
 [
     {
         "name": "Fluxo",
-        "port": 7,
+        "port": 6,
         "type": "Input"
     },
     {
         "name": "Valvula",
-        "port": 6,
+        "port": 7,
         "type": "Output"
     }
 ]
