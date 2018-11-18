@@ -1,0 +1,12 @@
+[
+    {
+        "name": "Fluxo",
+        "port": 7,
+        "type": "Input"
+    },
+    {
+        "name": "Valvula",
+        "port": 6,
+        "type": "Output"
+    }
+]
