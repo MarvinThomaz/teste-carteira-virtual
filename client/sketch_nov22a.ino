@@ -31,6 +31,9 @@ void loop() {
 	read_rfid_card();
 }
 
+/*
+ * Configuração do rfid
+ */
 void configure_rfid() {
   Serial.begin(9600);
 	
@@ -44,10 +47,16 @@ void configure_rfid() {
 	Serial.println(F("Scan PICC to see UID, SAK, type, and data blocks..."));
 }
 
+/*
+ * Configuração da valvula
+ */
 void configure_valve() {
   pinMode(7, OUTPUT);
 }
 
+/*
+ * Leitura da pulseira
+ */
 void read_rfid_card() {
 	if (!mfrc522.PICC_IsNewCardPresent()) {
 		return;
@@ -66,6 +75,9 @@ void read_rfid_card() {
 	open_valve();
 }
 
+/*
+ * Converte o id da pulseira para long
+ */
 unsigned long convert_uid(MFRC522 mfrc522)
 {
   unsigned long UID_unsigned;
@@ -77,14 +89,23 @@ unsigned long convert_uid(MFRC522 mfrc522)
   return (long)UID_unsigned;
 }
 
+/*
+ * Abre a válvula
+ */
 void open_valve() {
   digitalWrite(7, HIGH);
 }
 
+/*
+ * Fecha a valvula
+ */
 void close_valve() {
   digitalWrite(7, LOW);
 }
 
+/*
+ * Configura cliente http
+ */
 void configure_http() {
     pinMode(13, OUTPUT);
     digitalWrite(13, LOW);
@@ -93,6 +114,9 @@ void configure_http() {
     while(!Serial);
 }
 
+/*
+ * Realiza requisição de busca do cliente
+ */
 void request_client(long id) {
   HttpClient client;
   char reuslt[];
