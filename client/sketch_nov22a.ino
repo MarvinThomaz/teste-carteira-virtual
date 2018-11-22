@@ -1,5 +1,8 @@
+#include <ArduinoHttpClient.h>
 #include <SPI.h>
 #include <MFRC522.h>
+#include <Bridge.h>
+#include <HttpClient.h>
 
 /*
  * Variáveis globais com as portas do dispositivo RFID
@@ -18,6 +21,7 @@ MFRC522 mfrc522(SS_PIN, RST_PIN);
 void setup() {
   configure_rfid();
   configure_valve();
+  configure_http();
 }
 
 /*
@@ -53,9 +57,24 @@ void read_rfid_card() {
 		return;
 	}
 
-	mfrc522.PICC_DumpToSerial(&(mfrc522.uid));
+  unsigned long uid;
+  
+  uid = convert_uid(mfrc522);
+
+	request_client(uid);
 	
 	open_valve();
+}
+
+unsigned long convert_uid(MFRC522 mfrc522)
+{
+  unsigned long UID_unsigned;
+  UID_unsigned =  mfrc522.uid.uidByte[0] << 24;
+  UID_unsigned += mfrc522.uid.uidByte[1] << 16;
+  UID_unsigned += mfrc522.uid.uidByte[2] <<  8;
+  UID_unsigned += mfrc522.uid.uidByte[3];
+  
+  return (long)UID_unsigned;
 }
 
 void open_valve() {
@@ -64,4 +83,26 @@ void open_valve() {
 
 void close_valve() {
   digitalWrite(7, LOW);
+}
+
+void configure_http() {
+    pinMode(13, OUTPUT);
+    digitalWrite(13, LOW);
+    Bridge.begin();
+    Serial.begin(9600);
+    while(!Serial);
+}
+
+void request_client(long id) {
+  HttpClient client;
+  char reuslt[];
+  int index = 0;
+  client.get("https://chopp-cart.herokuapp.com/api/carts/" + id);
+  while (client.available()) {
+    result[index] = client.read();
+    index++;
+  }
+  Serial.flush();
+
+  delay(5000);
 }
