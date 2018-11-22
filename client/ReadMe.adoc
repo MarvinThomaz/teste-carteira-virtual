@@ -1,10 +1,10 @@
-:Author: me
-:Email: {AuthorEmail}
+:Author: Marvin Thomaz do Nascimento
+:Email: marvinthomaz@gmail.com
 :Date: 22/11/2018
-:Revision: version#
+:Revision: 0.0.1
 :License: Public Domain
 
-= Project: {Project}
+= Project: Choppeira Eletrica
 
 Describe your project
 
