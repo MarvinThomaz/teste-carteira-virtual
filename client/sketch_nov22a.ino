@@ -33,7 +33,8 @@ void loop() {
  * Configuração do rfid
  */
 void configure_rfid() {
-  Serial.begin(9600);
+  //Serial.begin(9600);
+  Serial.begin(230400);
   
   while (!Serial) {
     SPI.begin();
