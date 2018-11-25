@@ -64,11 +64,11 @@ void read_rfid_card() {
     return;
   }
 
-  unsigned long uid;
+  unsigned long int uid;
   
   uid = convert_uid(mfrc522);
 
-  const char* url = { "https://chopp-cart.herokuapp.com/api/carts/" + uid };
+  char* url = { "https://chopp-cart.herokuapp.com/api/carts/" + uid };
 
   String data = request(url);
   
@@ -81,6 +81,7 @@ void read_rfid_card() {
 char* convert_uid(MFRC522 mfrc522)
 {
   char* UID_unsigned;
+  
   UID_unsigned =  mfrc522.uid.uidByte[0];
   UID_unsigned += mfrc522.uid.uidByte[1];
   UID_unsigned += mfrc522.uid.uidByte[2];
@@ -108,9 +109,13 @@ void close_valve() {
  */
 void configure_http() {
     pinMode(13, OUTPUT);
+    
     digitalWrite(13, LOW);
+    
     Bridge.begin();
+    
     Serial.begin(9600);
+    
     while(!Serial);
 }
 
@@ -119,14 +124,19 @@ void configure_http() {
  */
 String request(const char* url) {
   HttpClient http;
-  int index = 0;
-  int result = http.get(url);
+  
+  int index = 0, result = http.get(url);
+  
   char data[300];
+  
   while (http.available()) {
     data[index] = http.read();
+    
     Serial.print(data);
+    
     index++;
   }
+  
   Serial.flush();
 
   delay(5000);
