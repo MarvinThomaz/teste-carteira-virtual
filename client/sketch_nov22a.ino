@@ -1,9 +1,7 @@
-#include <ArduinoHttpClient.h>
 #include <SPI.h>
 #include <MFRC522.h>
 #include <Bridge.h>
 #include <HttpClient.h>
-
 /*
  * Variáveis globais com as portas do dispositivo RFID
  */
@@ -28,7 +26,7 @@ void setup() {
  * Criação do looping de execução.
  */
 void loop() {
-	read_rfid_card();
+  read_rfid_card();
 }
 
 /*
@@ -36,15 +34,15 @@ void loop() {
  */
 void configure_rfid() {
   Serial.begin(9600);
-	
-	while (!Serial) {
-	  SPI.begin();
-	}
-	
-	mfrc522.PCD_Init();
-	mfrc522.PCD_DumpVersionToSerial();
-	
-	Serial.println(F("Scan PICC to see UID, SAK, type, and data blocks..."));
+  
+  while (!Serial) {
+    SPI.begin();
+  }
+  
+  mfrc522.PCD_Init();
+  mfrc522.PCD_DumpVersionToSerial();
+  
+  Serial.println(F("Scan PICC to see UID, SAK, type, and data blocks..."));
 }
 
 /*
@@ -58,35 +56,37 @@ void configure_valve() {
  * Leitura da pulseira
  */
 void read_rfid_card() {
-	if (!mfrc522.PICC_IsNewCardPresent()) {
-		return;
-	}
+  if (!mfrc522.PICC_IsNewCardPresent()) {
+    return;
+  }
 
-	if (!mfrc522.PICC_ReadCardSerial()) {
-		return;
-	}
+  if (!mfrc522.PICC_ReadCardSerial()) {
+    return;
+  }
 
   unsigned long uid;
   
   uid = convert_uid(mfrc522);
 
-	request_client(uid);
-	
-	open_valve();
+  const char* url = { "https://chopp-cart.herokuapp.com/api/carts/" + uid };
+
+  String data = request(url);
+  
+  open_valve();
 }
 
 /*
  * Converte o id da pulseira para long
  */
-unsigned long convert_uid(MFRC522 mfrc522)
+char* convert_uid(MFRC522 mfrc522)
 {
-  unsigned long UID_unsigned;
-  UID_unsigned =  mfrc522.uid.uidByte[0] << 24;
-  UID_unsigned += mfrc522.uid.uidByte[1] << 16;
-  UID_unsigned += mfrc522.uid.uidByte[2] <<  8;
+  char* UID_unsigned;
+  UID_unsigned =  mfrc522.uid.uidByte[0];
+  UID_unsigned += mfrc522.uid.uidByte[1];
+  UID_unsigned += mfrc522.uid.uidByte[2];
   UID_unsigned += mfrc522.uid.uidByte[3];
   
-  return (long)UID_unsigned;
+  return UID_unsigned;
 }
 
 /*
@@ -117,16 +117,19 @@ void configure_http() {
 /*
  * Realiza requisição de busca do cliente
  */
-void request_client(long id) {
-  HttpClient client;
-  char reuslt[];
+String request(const char* url) {
+  HttpClient http;
   int index = 0;
-  client.get("https://chopp-cart.herokuapp.com/api/carts/" + id);
-  while (client.available()) {
-    result[index] = client.read();
+  int result = http.get(url);
+  char data[300];
+  while (http.available()) {
+    data[index] = http.read();
+    Serial.print(data);
     index++;
   }
   Serial.flush();
 
   delay(5000);
+
+  return data;
 }
