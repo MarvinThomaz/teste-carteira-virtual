@@ -26,24 +26,28 @@ void setup() {
  * Criação do looping de execução.
  */
 void loop() {
-  read_rfid_card();
+  String id = read_rfid_card();
+  
+  if(id) {
+    String url = "https://chopp-cart.herokuapp.com/api/carts/" + id;
+
+    String data = request(url);
+    
+    open_valve();
+  }
 }
 
 /*
  * Configuração do rfid
  */
 void configure_rfid() {
-  //Serial.begin(9600);
-  Serial.begin(230400);
+  Serial.begin(9600);
   
   while (!Serial) {
     SPI.begin();
   }
   
   mfrc522.PCD_Init();
-  mfrc522.PCD_DumpVersionToSerial();
-  
-  Serial.println(F("Scan PICC to see UID, SAK, type, and data blocks..."));
 }
 
 /*
@@ -56,7 +60,7 @@ void configure_valve() {
 /*
  * Leitura da pulseira
  */
-void read_rfid_card() {
+String read_rfid_card() {
   if (!mfrc522.PICC_IsNewCardPresent()) {
     return;
   }
@@ -65,23 +69,17 @@ void read_rfid_card() {
     return;
   }
 
-  unsigned long int uid;
-  
-  uid = convert_uid(mfrc522);
+  String uid = convert_uid(mfrc522);
 
-  char* url = { "https://chopp-cart.herokuapp.com/api/carts/" + uid };
-
-  String data = request(url);
-  
-  open_valve();
+  return uid;
 }
 
 /*
  * Converte o id da pulseira para long
  */
-char* convert_uid(MFRC522 mfrc522)
+String convert_uid(MFRC522 mfrc522)
 {
-  char* UID_unsigned;
+  String UID_unsigned;
   
   UID_unsigned =  mfrc522.uid.uidByte[0];
   UID_unsigned += mfrc522.uid.uidByte[1];
@@ -123,17 +121,15 @@ void configure_http() {
 /*
  * Realiza requisição de busca do cliente
  */
-String request(const char* url) {
+String request(String url) {
   HttpClient http;
   
   int index = 0, result = http.get(url);
   
-  char data[300];
+  String data;
   
   while (http.available()) {
-    data[index] = http.read();
-    
-    Serial.print(data);
+    data += http.read();
     
     index++;
   }
