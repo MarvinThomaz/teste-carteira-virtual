@@ -5,8 +5,8 @@
 /*
  * Variáveis globais com as portas do dispositivo RFID
  */
-#define RST_PIN 9
-#define SS_PIN 10
+#define RST_PIN 8
+#define SS_PIN 9
 
 /*
  * Variável de controle do dispositivo RFID
